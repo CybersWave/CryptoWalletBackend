@@ -19,8 +19,3 @@ def generate_unique_userid():
         except Exception:
             return userid
 
-def generate_verification_code(self):
-    self.verification_code = str(randint(100000, 999999))
-    self.verification_expiry = timezone.now() + timedelta(minutes=30)
-    self.is_active = False
-    self.save()

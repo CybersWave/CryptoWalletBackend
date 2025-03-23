@@ -1,7 +1,7 @@
 from CryptoWallet import db_config
 from pathlib import Path
 from datetime import timedelta
-
+from decouple import config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -17,7 +17,7 @@ SECRET_KEY = 'django-insecure-jyba#zj&1ej_t$12x4k4b%(s4&h+$z(8f&e(cnbyxov4$5*otx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -135,6 +135,22 @@ AUTH_USER_MODEL = "account.CustomUser"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+
+#---------------------------------Email Backend----------------------------------------------
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  
+EMAIL_PORT = 587  
+EMAIL_USE_TLS = True 
+EMAIL_HOST_USER = config("EMAIL_HOST_USER") 
+SUPPORT_EMAIL_USER = config("SUPPORT_EMAIL_USER") 
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")  
+EMAIL_USE_SSL = False  
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  
+#---------------------------------Email Backend----------------------------------------------
+
+
+
 #-------------------------------------------Spectacural Configs----------------------------------------------------------
 
 SPECTACULAR_SETTINGS = {
@@ -159,9 +175,22 @@ REST_FRAMEWORK = {
 
 }
 
+DJOSER = {
+    'SERIALIZERS': {
+        'user_create': 'account.serializers.CustomUserCreateSerializer',
+    },
+    'USER_CREATE_PASSWORD_RETYPE': False,
+    'SEND_ACTIVATION_EMAIL': False,
+    'ACTIVATION_URL': 'dummy-url/',
+    'SET_PASSWORD_RETYPE': True,
+}
+
+DJOSER['SERIALIZERS']['set_password'] = 'account.serializers.CustomSetPasswordSerializer'
+
+
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=50),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
