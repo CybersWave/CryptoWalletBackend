@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'CryptoWallet.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = db_config.sqlite3
+DATABASES = db_config.postgres
 
 
 # Password validation
