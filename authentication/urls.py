@@ -1,9 +1,12 @@
 from django.urls import path, re_path, include
+from djoser import views
+
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView,
 )
+
 
 from .views import (
     VerifyCodeView, 
@@ -14,11 +17,19 @@ from .views import (
     ResetPinRequestView,
     ResetPinVerifyView
 )
-
 djoser_urls = [
-    re_path(r'^', include('djoser.urls')),
-    # re_path(r'^', include('djoser.urls.jwt')),
+    path('users/', views.UserViewSet.as_view({'post': 'create'}), name='user-register'),
+
+    path('users/me/', views.UserViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update',
+        'patch': 'partial_update',
+        'delete': 'destroy',
+    }), name='user-me'),
+
+    path('users/set_password/', views.UserViewSet.as_view({'post': 'set_password'}), name='set-password'),
 ]
+
 
 
 jwt_urls = [
@@ -37,8 +48,6 @@ custom_urls = [
 
     path('reset-pin-request/', ResetPinRequestView.as_view(), name='reset-pin-request'),
     path('reset-pin-verify/', ResetPinVerifyView.as_view(), name='reset-pin-verify'),
-
-
 ]
 
 

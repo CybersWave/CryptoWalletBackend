@@ -10,6 +10,7 @@ from authentication.utils import generate_verification_code
 from random import randint
 
 
+from .exceptions import UserAlreadyRegistered
 from .models import (
     CryptoCurrency,
     VirtualCurrency,
@@ -99,7 +100,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         email = validated_data['email']
 
         user, created = User.objects.get_or_create(email=email)
-        generate_verification_code(user)
+        generate_verification_code(user, purpose="email_verification")
 
 
         user.is_active = False
@@ -123,7 +124,11 @@ class PublicSetPasswordSerializer(serializers.Serializer):
 
         try:
             user = User.objects.get(email=email)
-            if not user.is_active:
+
+            if user.is_active:
+                raise UserAlreadyRegistered()
+
+            if not user.email_verified:
                 raise serializers.ValidationError("Email not verified.")
             user.set_password(password)
             user.is_active = True

@@ -68,7 +68,7 @@ class PublicSetPasswordView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({"detail": "Password set successfully."})
-        return Response(serializer.errors, status=400)
+        return Response({"detail" : serializer.errors}, status=400)
 
 
 class VerifyCodeView(APIView):
@@ -97,7 +97,7 @@ class VerifyCodeView(APIView):
                 return Response({"error": "Verification code has expired."}, status=400)
 
             if purpose == 'email_verification':
-                user.is_active = True
+                user.email_verified = True
                 user.save()
             elif purpose == 'password_recovery':
                 return Response({"detail": f"{purpose.replace('_', ' ').capitalize()} successful."}, status=200)

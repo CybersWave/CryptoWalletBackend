@@ -44,6 +44,7 @@ class CustomUser(AbstractUser):
     phone_number = PhoneNumberField(blank=True)
     dob = models.DateField(blank=True, null=True)
     country = models.CharField(max_length=100, blank=True)
+    email_verified = models.BooleanField(default=False, null=True)
 
     objects = CustomUserManager()
 
